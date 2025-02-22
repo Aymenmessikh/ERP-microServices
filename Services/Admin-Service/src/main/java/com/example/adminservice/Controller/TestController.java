@@ -1,5 +1,6 @@
 package com.example.adminservice.Controller;
 
+import com.example.adminservice.Config.AuditLog.AuditEvent;
 import com.example.adminservice.Dto.Authority.AuthorityResponse;
 import com.example.adminservice.Dto.User.UserResponse;
 import com.example.adminservice.Entity.Authority;
@@ -9,15 +10,14 @@ import com.example.adminservice.Services.AuthorityService;
 import com.example.adminservice.Services.ExtracteAuthorityService;
 import com.example.adminservice.Services.ProfileService;
 import com.example.adminservice.Services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
@@ -49,4 +49,9 @@ public class TestController {
         List<AuthorityResponse> grantedAuthorities=authorityService.getAllAuthoritys();
         return new ResponseEntity<>(grantedAuthorities, HttpStatus.OK);
     }
+//    @GetMapping("getjwtFR")
+//    public ResponseEntity<Object> getjwtFR(){
+//        Object o=auditAspect.logRequest();
+//        return new ResponseEntity<>(o, HttpStatus.OK);
+//    }
 }

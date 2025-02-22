@@ -41,7 +41,7 @@ public class ModuleController {
     }
 
     @PreAuthorize("hasAuthority('READ_MODULE_BY_CODE')")
-    @GetMapping("/getByCode/{code}")
+    @GetMapping("/byCode/{code}")
     public ResponseEntity<ModuleResponse> getModuleByCode(@PathVariable String code) {
         ModuleResponse moduleResponse = moduleService.getModuleByCode(code);
         return new ResponseEntity<>(moduleResponse, HttpStatus.OK);

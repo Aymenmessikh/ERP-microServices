@@ -41,7 +41,7 @@ public class GroupeController {
     }
 
     @PreAuthorize("hasAuthority('READ_GROUPE_BY_LIBELLE')")
-    @GetMapping("/getByLibelle/{libelle}")
+    @GetMapping("/byLibelle/{libelle}")
     public ResponseEntity<GroupeResponse> getGroupeByLibelle(@PathVariable String libelle) {
         GroupeResponse groupeResponse = groupeService.getGroupeByLibelle(libelle);
         return new ResponseEntity<>(groupeResponse, HttpStatus.OK);

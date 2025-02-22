@@ -7,7 +7,7 @@ import com.example.adminservice.Dto.User.UserResponse;
 import com.example.adminservice.Entity.Profile;
 import com.example.adminservice.Entity.ProfileAuthority;
 import com.example.adminservice.Entity.User;
-import com.example.adminservice.Events.Kafka.KafkaEvents;
+//import com.example.adminservice.Events.Kafka.KafkaEvents;
 import com.example.adminservice.Events.Modele.UserEvent;
 import com.example.adminservice.Exeptions.MyResourceNotFoundException;
 import com.example.adminservice.Mapper.User.UserMapper;
@@ -31,7 +31,7 @@ public class UserService {
     private final ProfileRepository profileRepository;
     private final KeycloakService keycloakService;
     private final UserMapper userMapper;
-    private final KafkaEvents kafkaEvents;
+//    private final KafkaEvents kafkaEvents;
 //    public UserResponse createUser(UserRequest userRequest, Long profileTypeId) {
 //        String uuid = keycloakService.createUser(userRequest);
 //        if (uuid == null) {
@@ -188,13 +188,14 @@ public class UserService {
     public UserResponse updateUser(UserRequest userRequest,Long id){
         User user=userRepository.findById(id)
                 .orElseThrow(()->new MyResourceNotFoundException("User not found with id:"+id));
-        user.setUserName(user.getUserName());
-        user.setEmail(user.getEmail());
-        user.setFirstName(user.getFirstName());
-        user.setLastName(user.getLastName());
-        user.setPhoneNumber(user.getPhoneNumber());
-        userRepository.save(user);
-        keycloakService.updateUser(user.getUuid(),userRequest);
+        user.setUserName(userRequest.getUserName());
+        user.setEmail(userRequest.getEmail());
+        user.setFirstName(userRequest.getFirstName());
+        user.setLastName(userRequest.getLastName());
+        user.setPhoneNumber(userRequest.getPhoneNumber());
+        System.out.println("User apres la modification :"+user);
+//        userRepository.save(user);
+//        keycloakService.updateUser(user.getUuid(),userRequest);
         return userMapper.DtoFromEntity(user);
     }
     public UserResponse enableDisabeleUser(Long id,Boolean enable){
