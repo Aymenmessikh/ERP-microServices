@@ -9,7 +9,18 @@
         <option value="$PROJECT_DIR$/Services/Config-Server/pom.xml" />
         <option value="$PROJECT_DIR$/Services/Admin-Service/pom.xml" />
         <option value="$PROJECT_DIR$/Services/Notification-Service/pom.xml" />
+        <option value="$PROJECT_DIR$/Services/demo/pom.xml" />
+        <option value="$PROJECT_DIR$/Services/Audit-log-Service/pom.xml" />
+        <option value="$PROJECT_DIR$/Services/Audit-log-service/pom.xml" />
+        <option value="$PROJECT_DIR$/Services/AuditLog-Service/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/Services/Audit-log-Service/pom.xml" />
+        <option value="$PROJECT_DIR$/Services/Audit-log-service/pom.xml" />
+        <option value="$PROJECT_DIR$/Services/demo/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_19" default="true" project-jdk-name="19" project-jdk-type="JavaSDK">

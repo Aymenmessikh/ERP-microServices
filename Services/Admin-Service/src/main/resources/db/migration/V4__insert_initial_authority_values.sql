@@ -6,7 +6,7 @@ values
     ('CREATE_USER', 'true', '1', '1'),
     ('READ_ALL_USERS', 'true', '1', '1'),
     ('READ_USER', 'true', '1', '1'),
-    ('UPDATE_USER''', 'true', '1', '1'),
+    ('UPDATE_USER', 'true', '1', '1'),
     ('DELETE_USER', 'true', '1', '1'),
     ('MANAGE_USER_STATUS', 'true', '1', '1'),
     ('CREATE_AUTHORITY', 'true', '1', '2'),

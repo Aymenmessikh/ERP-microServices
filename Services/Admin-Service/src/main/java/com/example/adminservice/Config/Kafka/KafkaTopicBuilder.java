@@ -24,4 +24,9 @@ public class KafkaTopicBuilder {
         return TopicBuilder.name("sms_notification")
                 .build();
     }
+    @Bean
+    public NewTopic auditLogTopic(){
+        return TopicBuilder.name("audit-topic")
+                .build();
+    }
 }
