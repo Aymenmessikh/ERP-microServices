@@ -6,5 +6,6 @@ import com.example.adminservice.Entity.Groupe;
 
 public interface GroupeMapper {
     Groupe EnityFromDto(GroupeRequest groupeRequest);
+
     GroupeResponse DtoFromEntity(Groupe groupe);
 }

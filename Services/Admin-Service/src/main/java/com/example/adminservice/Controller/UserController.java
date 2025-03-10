@@ -1,10 +1,17 @@
 package com.example.adminservice.Controller;
 
+import com.example.adminservice.Config.filter.clause.Clause;
+import com.example.adminservice.Config.filter.clause.ClauseOneArg;
+import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.Critiria;
+import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.SearchValue;
+import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.SortParam;
 import com.example.adminservice.Dto.User.UserRequest;
 import com.example.adminservice.Dto.User.UserResponse;
 import com.example.adminservice.Services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,13 +29,21 @@ public class UserController {
     @PostMapping("{id}")
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest, @PathVariable Long id){
         UserResponse userResponse = userService.createUser(userRequest, id);
-        return new ResponseEntity<>(userResponse, HttpStatus.OK);
+        return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAuthority('READ_ALL_USERS')")
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllUsers(){
-        List<UserResponse> userResponses = userService.getAllUsers();
+    public ResponseEntity<PageImpl<UserResponse>> getAllUsers(@Critiria List<Clause> filter,
+                                                              @SearchValue ClauseOneArg searchValue,
+                                                              @SortParam PageRequest pageRequest) {
+        filter.add(searchValue);
+        PageImpl<UserResponse> userResponses = userService.getAllUsers(filter,pageRequest);
+        return new ResponseEntity<>(userResponses, HttpStatus.OK);
+    }
+    @GetMapping("get")
+    public ResponseEntity<List<UserResponse>> getUsers(){
+        List<UserResponse> userResponses=userService.getUsers();
         return new ResponseEntity<>(userResponses, HttpStatus.OK);
     }
 
@@ -61,7 +76,9 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('MANAGE_USER_STATUS')")
     @PutMapping("enableDisable/{id}/{enable}")
-    public void enableDisableUser(@PathVariable Long id, @PathVariable Boolean enable) {
-        userService.enableDisabeleUser(id, enable);
+    public ResponseEntity<UserResponse> enableDisableUser(@PathVariable Long id, @PathVariable Boolean enable) {
+        System.out.println("enableDisableUser called with id: " + id + " and enable: " + enable);
+       UserResponse userResponse= userService.enableDisabeleUser(id, enable);
+       return new ResponseEntity<>(userResponse,HttpStatus.CREATED);
     }
 }

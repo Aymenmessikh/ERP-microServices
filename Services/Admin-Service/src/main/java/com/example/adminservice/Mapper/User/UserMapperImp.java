@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserMapperImp implements UserMapper {
     private final ProfileMapper profileMapper;
+
     @Override
     public User EntityFromDto(UserRequest userRequest) {
         return User.builder()
@@ -30,14 +31,14 @@ public class UserMapperImp implements UserMapper {
 
     @Override
     public UserResponse DtoFromEntity(User user) {
-        List<ProfileResponse> profileResponses=new ArrayList<>();
-        ProfileResponse profileResponse=null;
-        if(user.getProfiles()!=null){
-            profileResponses=user.getProfiles()
+        List<ProfileResponse> profileResponses = new ArrayList<>();
+        ProfileResponse profileResponse = null;
+        if (user.getProfiles() != null) {
+            profileResponses = user.getProfiles()
                     .stream().map(profileMapper::DtoFromEntity).collect(Collectors.toList());
         }
-        if (user.getActifProfile()!=null){
-            profileResponse=profileMapper.DtoFromEntity(user.getActifProfile());
+        if (user.getActifProfile() != null) {
+            profileResponse = profileMapper.DtoFromEntity(user.getActifProfile());
         }
         return UserResponse.builder()
                 .userName(user.getUserName())
@@ -46,7 +47,7 @@ public class UserMapperImp implements UserMapper {
                 .id(user.getId())
                 .actifProfile(profileResponse)
                 .profiles(profileResponses)
-                .active(user.getActif())
+                .actif(user.getActif())
                 .email(user.getEmail())
                 .uuid(user.getUuid())
                 .phoneNumber(user.getPhoneNumber())
@@ -60,7 +61,7 @@ public class UserMapperImp implements UserMapper {
                 .lastName(user.getLastName())
                 .firstName(user.getFirstName())
                 .id(user.getId())
-                .active(user.getActif())
+                .actif(user.getActif())
                 .email(user.getEmail())
                 .uuid(user.getUuid())
                 .phoneNumber(user.getPhoneNumber())

@@ -1,8 +1,9 @@
 package com.example.adminservice.Services;
 
-import com.example.adminservice.Entity.*;
+import com.example.adminservice.Config.Exceptions.MyResourceNotFoundException;
+import com.example.adminservice.Entity.Authority;
 import com.example.adminservice.Entity.Module;
-import com.example.adminservice.Exeptions.MyResourceNotFoundException;
+import com.example.adminservice.Entity.Profile;
 import com.example.adminservice.Repository.AuthorityRepository;
 import com.example.adminservice.Repository.ModuleRepository;
 import com.example.adminservice.Repository.UserRepository;
@@ -12,11 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,13 +60,13 @@ public class PermisionService {
         /* get authority by libelle and module name */
 
         Module module = moduleRepository.findByModuleCode(moduleCode)
-                .orElseThrow(()->new MyResourceNotFoundException("module not found"));
+                .orElseThrow(() -> new MyResourceNotFoundException("module not found"));
         Authority authority = authorityRepository.findByLibelleAndModule(authorityLibelle, module)
-                .orElseThrow(()->new MyResourceNotFoundException("authority notFound"));
+                .orElseThrow(() -> new MyResourceNotFoundException("authority notFound"));
 
         /* get user actif profile authorities and check if conatins the authority requested */
         Profile profile = userRepository.findByUserName(username)
-                .orElseThrow(()-> new MyResourceNotFoundException("user not found")).getActifProfile();
+                .orElseThrow(() -> new MyResourceNotFoundException("user not found")).getActifProfile();
 
         /* return false for revoked authority or true if granted */
         if (profile.getProfileAuthorities().stream().anyMatch(profileAuthority -> profileAuthority.getAuthority().equals(authority))) {

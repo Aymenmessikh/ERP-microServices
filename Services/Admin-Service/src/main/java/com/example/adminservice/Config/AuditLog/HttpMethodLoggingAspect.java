@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -25,9 +24,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
-@Aspect
+
 @Component
 @RequiredArgsConstructor
+@Aspect
 public class HttpMethodLoggingAspect {
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(HttpMethodLoggingAspect.class);
@@ -41,7 +41,6 @@ public class HttpMethodLoggingAspect {
     private final AuditLogProducer auditLogProducer;
 
     // Log après l'exécution réussie des méthodes POST
-    @Async
     @AfterReturning(pointcut = "com.example.adminservice.Config.AuditLog.HttpMethodPointcuts.postMethods())", returning = "result")
     public void logAfterPost(JoinPoint joinPoint, Object result) throws JsonProcessingException {
         Object responseBody = extractResponseBody(result);
@@ -63,13 +62,8 @@ public class HttpMethodLoggingAspect {
                 .build();
         auditLogProducer.sendAuditEvent(auditEvent);
 
-//        System.out.println("✅ [POST] Réponse: " + result);
-//        System.out.println("✅ [POST] Status: " + auditEvent.getStatus());
-//        System.out.println("✅ [POST] methodeName: " +joinPoint.getSignature().getName());
-//        logger.info("Audit Event (Success): {}", auditEvent);
     }
 
-    @Async
     @AfterThrowing(pointcut = "com.example.adminservice.Config.AuditLog.HttpMethodPointcuts.postMethods()", throwing = "ex")
     public void logAfterPostError(JoinPoint joinPoint, Exception ex) throws JsonProcessingException {
         AuditEvent auditEvent = AuditEvent.builder()
@@ -89,11 +83,10 @@ public class HttpMethodLoggingAspect {
                 .build();
         auditLogProducer.sendAuditEvent(auditEvent);
 
-        System.out.println("❌ [POST] Erreur: " + ex.getMessage());
+        System.out.println("[POST] Erreur: " + ex.getMessage());
         logger.error("Audit Event (Error): {}", auditEvent);
     }
 
-    @Async
     @AfterReturning(pointcut = "com.example.adminservice.Config.AuditLog.HttpMethodPointcuts.getMethods())", returning = "result")
     public void logAfterGet(JoinPoint joinPoint, Object result) throws JsonProcessingException {
         AuditEvent auditEvent = AuditEvent.builder()
@@ -113,13 +106,10 @@ public class HttpMethodLoggingAspect {
                 .build();
         auditLogProducer.sendAuditEvent(auditEvent);
 
-//        System.out.println("✅ [GET] Réponse: " + result);
-//        System.out.println("✅ [GET] Status: " + auditEvent.getStatus());
-//        System.out.println("✅ [GET] methodeName: " +joinPoint.getSignature().getName());
-//        logger.info("Audit Event (Success): {}", auditEvent);
+        logger.info("Audit Event (Success): {}", auditEvent);
     }
 
-    @Async
+
     @AfterThrowing(pointcut = "com.example.adminservice.Config.AuditLog.HttpMethodPointcuts.getMethods()", throwing = "ex")
     public void logAfterGetError(JoinPoint joinPoint, Exception ex) throws JsonProcessingException {
         AuditEvent auditEvent = AuditEvent.builder()
@@ -139,11 +129,11 @@ public class HttpMethodLoggingAspect {
                 .build();
         auditLogProducer.sendAuditEvent(auditEvent);
 
-        System.out.println("❌ [GET] Erreur: " + ex.getMessage());
+        System.out.println("[GET] Erreur: " + ex.getMessage());
         logger.error("Audit Event (Error): {}", auditEvent);
     }
 
-    @Async
+
     @AfterReturning(
             pointcut = "com.example.adminservice.Config.AuditLog.HttpMethodPointcuts.deleteMethods() && args(id)",
             returning = "result"
@@ -172,9 +162,8 @@ public class HttpMethodLoggingAspect {
         logger.info("Id de objet (DELETE Success): {}", id);
     }
 
-    @Async
     @AfterThrowing(pointcut = "com.example.adminservice.Config.AuditLog.HttpMethodPointcuts.deleteMethods() && args(id)", throwing = "ex")
-    public void logAfterDeleteError(JoinPoint joinPoint,Long id, Exception ex) throws JsonProcessingException {
+    public void logAfterDeleteError(JoinPoint joinPoint, Long id, Exception ex) throws JsonProcessingException {
         String entityName = getEntityName(joinPoint);
 
         AuditEvent auditEvent = AuditEvent.builder()
@@ -197,7 +186,6 @@ public class HttpMethodLoggingAspect {
         logger.error("Audit Event (DELETE Error): {}", auditEvent);
     }
 
-    @Async
     @AfterReturning(pointcut = "com.example.adminservice.Config.AuditLog.HttpMethodPointcuts.putMethods()", returning = "result")
     public void logAfterPut(JoinPoint joinPoint, Object result) throws JsonProcessingException {
         String entityName = getEntityName(joinPoint);
@@ -223,9 +211,9 @@ public class HttpMethodLoggingAspect {
         logger.info("Audit Event (PUT Success): {}", auditEvent);
     }
 
-    @Async
+
     @AfterThrowing(pointcut = "com.example.adminservice.Config.AuditLog.HttpMethodPointcuts.putMethods() && args(id)", throwing = "ex")
-    public void logAfterPutError(JoinPoint joinPoint,Long id, Exception ex) throws JsonProcessingException {
+    public void logAfterPutError(JoinPoint joinPoint, Long id, Exception ex) throws JsonProcessingException {
         String entityName = getEntityName(joinPoint);
         AuditEvent auditEvent = AuditEvent.builder()
                 .moduleName(MODULE_NAME)
@@ -254,17 +242,19 @@ public class HttpMethodLoggingAspect {
             // Recherche d'un getter "getId" ou autre identifiant possible
             Method getIdMethod = respnseBody.getClass().getMethod("getId");
             Object idValue = getIdMethod.invoke(respnseBody);
-            return idValue != null ? (Long)idValue : null;
+            return idValue != null ? (Long) idValue : null;
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             return null; // Retourne null si l'entité n'a pas de méthode getId()
         }
     }
+
     private Object extractResponseBody(Object result) {
         if (result instanceof ResponseEntity<?> responseEntity) {
             return responseEntity.getBody(); // Retourne le body si c'est un ResponseEntity
         }
         return result; // Retourne l'objet tel quel s'il n'est pas encapsulé dans ResponseEntity
     }
+
     public Jwt getTokenFromRequest() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String authorizationHeader = request.getHeader("Authorization");
@@ -278,6 +268,7 @@ public class HttpMethodLoggingAspect {
 
         return null;
     }
+
     public String getEntityName(JoinPoint joinPoint) {
         String controllerName = joinPoint.getSignature().getDeclaringType().getSimpleName();
         String entityName = controllerName.length() > 10
@@ -285,20 +276,23 @@ public class HttpMethodLoggingAspect {
                 : controllerName;
         return entityName;
     }
+
     public HttpServletRequest getRequest() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes()).getRequest();
         return request;
 
     }
+
     private String getPrincipleClaimName() {
-        Jwt jwt=getTokenFromRequest();
+        Jwt jwt = getTokenFromRequest();
         String claimName = JwtClaimNames.SUB;
         if (principleAttribute != null) {
             claimName = principleAttribute;
         }
         return jwt.getClaim(claimName);
     }
+
     public String extractUserNameFromToken() {
         String userName = getPrincipleClaimName();
         return userName;

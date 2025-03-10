@@ -17,7 +17,7 @@ public class UserResponse {
     private String email;
     private String uuid;
     private String phoneNumber;
-    private Boolean active;
+    private Boolean actif;
     private List<ProfileResponse> profiles;
     private ProfileResponse actifProfile;
 }

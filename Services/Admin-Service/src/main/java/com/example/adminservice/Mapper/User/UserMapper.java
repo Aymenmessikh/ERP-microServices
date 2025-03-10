@@ -6,6 +6,8 @@ import com.example.adminservice.Entity.User;
 
 public interface UserMapper {
     User EntityFromDto(UserRequest userRequest);
+
     UserResponse DtoFromAllEntity(User user);
+
     UserResponse DtoFromEntity(User user);
 }

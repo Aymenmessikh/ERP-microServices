@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface GroupeRepository extends JpaRepository<Groupe ,Long> , JpaSpecificationExecutor<Groupe> {
+public interface GroupeRepository extends JpaRepository<Groupe, Long>, JpaSpecificationExecutor<Groupe> {
     Optional<Groupe> findByLibelle(String libelle);
 }

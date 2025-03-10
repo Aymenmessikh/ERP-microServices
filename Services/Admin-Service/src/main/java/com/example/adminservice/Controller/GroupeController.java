@@ -1,10 +1,17 @@
 package com.example.adminservice.Controller;
 
+import com.example.adminservice.Config.filter.clause.Clause;
+import com.example.adminservice.Config.filter.clause.ClauseOneArg;
+import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.Critiria;
+import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.SearchValue;
+import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.SortParam;
 import com.example.adminservice.Dto.Groupe.GroupeRequest;
 import com.example.adminservice.Dto.Groupe.GroupeResponse;
 import com.example.adminservice.Services.GroupeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,9 +34,19 @@ public class GroupeController {
     }
 
     @PreAuthorize("hasAuthority('READ_GROUPES')")
-    @GetMapping
+    @GetMapping("get")
     public ResponseEntity<List<GroupeResponse>> getAllGroupes() {
         List<GroupeResponse> groupeResponses = groupeService.getAllGroupes();
+        return new ResponseEntity<>(groupeResponses, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('READ_GROUPES')")
+    @GetMapping
+    public ResponseEntity<PageImpl<GroupeResponse>> getAllGroupes(@Critiria List<Clause> filter,
+                                                                  @SearchValue ClauseOneArg searchValue,
+                                                                  @SortParam PageRequest pageRequest) {
+        filter.add(searchValue);
+        PageImpl<GroupeResponse> groupeResponses = groupeService.getAllGroupesWithFilter(filter, pageRequest);
         return new ResponseEntity<>(groupeResponses, HttpStatus.OK);
     }
 

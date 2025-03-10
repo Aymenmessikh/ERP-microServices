@@ -6,5 +6,6 @@ import com.example.adminservice.Entity.Role;
 
 public interface RoleMapper {
     Role EntityFromDto(RoleRequest roleRequest);
+
     RoleResponse DtoFromEntity(Role role);
 }

@@ -1,4 +1,4 @@
-package com.example.adminservice.Exeptions;
+package com.example.adminservice.Config.Exceptions;
 
 public class RessourceAlreadyDisabledException extends RuntimeException{
     public RessourceAlreadyDisabledException(String message) {

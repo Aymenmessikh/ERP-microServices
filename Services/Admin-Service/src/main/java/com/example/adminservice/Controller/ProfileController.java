@@ -1,6 +1,5 @@
 package com.example.adminservice.Controller;
 
-import com.example.adminservice.Dto.Profile.ProfileAuthorityResponse;
 import com.example.adminservice.Dto.Profile.ProfileForModuleResponse;
 import com.example.adminservice.Dto.Profile.ProfileRequest;
 import com.example.adminservice.Dto.Profile.ProfileResponse;
@@ -29,6 +28,11 @@ public class ProfileController {
         ProfileResponse profileResponse = profileService.addProfileToUser(profileRequest, id);
         return new ResponseEntity<>(profileResponse, HttpStatus.CREATED);
     }
+    @GetMapping("{id}")
+    public ResponseEntity<ProfileResponse> getProfileById(@PathVariable Long id) {
+        ProfileResponse profileResponse = profileService.getProfileById(id);
+        return new ResponseEntity<>(profileResponse, HttpStatus.OK);
+    }
 
     @PreAuthorize("hasAuthority('DELETE_PROFILE')")
     @DeleteMapping("{id}")
@@ -45,15 +49,15 @@ public class ProfileController {
     }
 
     @PreAuthorize("hasAuthority('ENABLE_PROFILE')")
-    @PutMapping("activate/{id}")
-    public ResponseEntity<ProfileResponse> activateProfile(@PathVariable Long id) {
+    @PutMapping("enable/{id}")
+    public ResponseEntity<ProfileResponse> enableProfile(@PathVariable Long id) {
         ProfileResponse profileResponse = profileService.activeProfile(id);
         return new ResponseEntity<>(profileResponse, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('DISABLE_PROFILE')")
-    @PutMapping("deactivate/{id}")
-    public ResponseEntity<ProfileResponse> deactivateProfile(@PathVariable Long id) {
+    @PutMapping("disable/{id}")
+    public ResponseEntity<ProfileResponse> disableProfile(@PathVariable Long id) {
         ProfileResponse profileResponse = profileService.desactiveProfile(id);
         return new ResponseEntity<>(profileResponse, HttpStatus.OK);
     }
@@ -66,16 +70,16 @@ public class ProfileController {
     }
 
     @PreAuthorize("hasAuthority('ADD_ROLE_TO_PROFILE')")
-    @PutMapping("addRole/{profileId}/{roleId}")
-    public ResponseEntity<ProfileResponse> addRoleToProfile(@PathVariable Long profileId, @PathVariable Long roleId) {
-        ProfileResponse profileResponse = profileService.addRoleToProfile(profileId, roleId);
+    @PutMapping("addRole/{profileId}")
+    public ResponseEntity<ProfileResponse> addRoleToProfile(@PathVariable Long profileId,@RequestBody List<Long> roleIds) {
+        ProfileResponse profileResponse = profileService.addRoleToProfile(profileId, roleIds);
         return new ResponseEntity<>(profileResponse, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('REMOVE_ROLE_FROM_PROFILE')")
-    @PutMapping("removeRole/{profileId}/{roleId}")
-    public ResponseEntity<ProfileResponse> removeRoleFromProfile(@PathVariable Long profileId, @PathVariable Long roleId) {
-        ProfileResponse profileResponse = profileService.removeRoleFromProfile(profileId, roleId);
+    @PutMapping("removeRole/{profileId}")
+    public ResponseEntity<ProfileResponse> removeRoleFromProfile(@PathVariable Long profileId ,@RequestBody List<Long> roleIds) {
+        ProfileResponse profileResponse = profileService.removeRoleFromProfile(profileId, roleIds);
         return new ResponseEntity<>(profileResponse, HttpStatus.OK);
     }
 
@@ -108,39 +112,42 @@ public class ProfileController {
     }
 
     @PreAuthorize("hasAuthority('READ_PROFILES_BY_MODULE')")
-    @GetMapping("getProfiles/{userId}/{moduleId}")
-    public ResponseEntity<List<ProfileForModuleResponse>> getProfileByModuleAndUser(@PathVariable Long userId, @PathVariable Long moduleId) {
-        List<ProfileForModuleResponse> profiles = profileService.getProfileByModuleAndUser(userId, moduleId);
+    @GetMapping("Profiles/{userName}")
+    public ResponseEntity<List<ProfileResponse>> getProfileByUser(@PathVariable String userName) {
+        List<ProfileResponse> profiles = profileService.getProfileByUser(userName);
         return new ResponseEntity<>(profiles, HttpStatus.OK);
     }
 
+
     @PreAuthorize("hasAuthority('ADD_AUTHORITY_TO_PROFILE')")
-    @PutMapping("addAuthority/{profileId}/{authorityId}")
-    public ResponseEntity<ProfileResponse> addAuthorityToProfile(@PathVariable Long profileId, @PathVariable Long authorityId) {
-        ProfileResponse profileResponse = profileService.addAuthorityToProfile(profileId, authorityId);
+    @PostMapping("addAuthority/{profileId}")
+    public ResponseEntity<ProfileResponse> addAuthorityToProfile(@PathVariable Long profileId,
+                                                                 @RequestBody List<Long> authorityIds) {
+        ProfileResponse profileResponse = profileService.addAuthorityToProfile(profileId, authorityIds);
         return new ResponseEntity<>(profileResponse, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('REMOVE_AUTHORITY_FROM_PROFILE')")
-    @DeleteMapping("removeAuthority/{id}")
-    public ResponseEntity<Void> removeAuthorityFromProfile(@PathVariable Long id) {
-        profileService.removeAuthorityFromProfile(id);
+    @DeleteMapping("removeAuthority/{profileId}")
+    public ResponseEntity<Void> removeAuthorityFromProfile(@PathVariable Long profileId,
+                                                           @RequestBody List<Long> authorityIds) {
+        profileService.removeAuthorityFromProfile(profileId,authorityIds);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PreAuthorize("hasAuthority('REVOKE_AUTHORITY')")
-    @PutMapping("revokeAuthority/{id}")
-    public ResponseEntity<ProfileAuthorityResponse> revokeAuthorityFromProfile(@PathVariable Long id) {
-        ProfileAuthorityResponse profile = profileService.revokeAuthorityFromProfile(id);
-        return new ResponseEntity<>(profile, HttpStatus.OK);
-    }
+//    @PreAuthorize("hasAuthority('REVOKE_AUTHORITY')")
+//    @PutMapping("revokeAuthority/{id}")
+//    public ResponseEntity<ProfileAuthorityResponse> revokeAuthorityFromProfile(@PathVariable Long id) {
+//        ProfileAuthorityResponse profile = profileService.revokeAuthorityFromProfile(id);
+//        return new ResponseEntity<>(profile, HttpStatus.OK);
+//    }
 
-    @PreAuthorize("hasAuthority('GRANT_AUTHORITY')")
-    @PutMapping("grantAuthority/{id}")
-    public ResponseEntity<ProfileAuthorityResponse> grantAuthorityToProfile(@PathVariable Long id) {
-        ProfileAuthorityResponse profile = profileService.granteAuthorityFromProfile(id);
-        return new ResponseEntity<>(profile, HttpStatus.OK);
-    }
+//    @PreAuthorize("hasAuthority('GRANT_AUTHORITY')")
+//    @PutMapping("grantAuthority/{id}")
+//    public ResponseEntity<ProfileAuthorityResponse> grantAuthorityToProfile(@PathVariable Long id) {
+//        ProfileAuthorityResponse profile = profileService.granteAuthorityFromProfile(id);
+//        return new ResponseEntity<>(profile, HttpStatus.OK);
+//    }
 
     @PreAuthorize("hasAuthority('READ_USER_UUID_FOR_GROUP')")
     @GetMapping("userUuid")

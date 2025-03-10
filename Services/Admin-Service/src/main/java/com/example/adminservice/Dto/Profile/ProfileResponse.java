@@ -3,7 +3,6 @@ package com.example.adminservice.Dto.Profile;
 import com.example.adminservice.Dto.Groupe.GroupeResponse;
 import com.example.adminservice.Dto.Module.ModuleResponse;
 import com.example.adminservice.Dto.Role.RoleResponse;
-import com.example.adminservice.Dto.User.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

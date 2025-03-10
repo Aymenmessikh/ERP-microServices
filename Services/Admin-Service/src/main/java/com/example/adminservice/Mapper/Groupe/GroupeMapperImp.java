@@ -6,7 +6,7 @@ import com.example.adminservice.Entity.Groupe;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GroupeMapperImp implements GroupeMapper{
+public class GroupeMapperImp implements GroupeMapper {
     @Override
     public Groupe EnityFromDto(GroupeRequest groupeRequest) {
         return Groupe.builder()
