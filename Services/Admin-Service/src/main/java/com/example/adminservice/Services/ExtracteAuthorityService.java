@@ -11,10 +11,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class ExtracteAuthorityService {
     private final ProfileRepository profileRepository;
     @Value("${module_name}")
     private String MODULE_NAME;
+
     public Profile fetchProfileWithAuthorities(Long profileId) {
         return profileRepository.findById(profileId)
                 .map(profile -> {
@@ -32,8 +35,8 @@ public class ExtracteAuthorityService {
                 }).orElse(null);
     }
 
-    public Set<GrantedAuthority> extractAuthority(Long id){
-        Profile activeProfile=fetchProfileWithAuthorities(id);
+    public Set<GrantedAuthority> extractAuthority(Long id) {
+        Profile activeProfile = fetchProfileWithAuthorities(id);
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 
         if (activeProfile.getProfileAuthorities() != null) {

@@ -1,4 +1,4 @@
-package com.example.adminservice.Exeptions;
+package com.example.adminservice.Config.Exceptions;
 
 public class UserCreationException extends RuntimeException {
     public UserCreationException(String message) {

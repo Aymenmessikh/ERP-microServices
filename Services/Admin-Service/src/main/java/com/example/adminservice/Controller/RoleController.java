@@ -1,10 +1,18 @@
 package com.example.adminservice.Controller;
 
+import com.example.adminservice.Config.filter.clause.Clause;
+import com.example.adminservice.Config.filter.clause.ClauseOneArg;
+import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.Critiria;
+import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.SearchValue;
+import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.SortParam;
+import com.example.adminservice.Dto.Authority.AuthorityResponse;
 import com.example.adminservice.Dto.Role.RoleRequest;
 import com.example.adminservice.Dto.Role.RoleResponse;
 import com.example.adminservice.Services.RoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,8 +35,11 @@ public class RoleController {
 
     @PreAuthorize("hasAuthority('READ_ALL_ROLES')")
     @GetMapping
-    public ResponseEntity<List<RoleResponse>> getAllRoles(){
-        List<RoleResponse> roleResponses = roleService.getAllRoles();
+    public ResponseEntity<PageImpl<RoleResponse>> getAllAuthorityss(@Critiria List<Clause> filter,
+                                                                    @SearchValue ClauseOneArg searchValue,
+                                                                    @SortParam PageRequest pageRequest) {
+        filter.add(searchValue);
+        PageImpl<RoleResponse> roleResponses = roleService.getAllRoles(filter,pageRequest);
         return new ResponseEntity<>(roleResponses, HttpStatus.OK);
     }
 
@@ -74,16 +85,26 @@ public class RoleController {
     }
 
     @PreAuthorize("hasAuthority('GRANT_AUTHORITY_TO_ROLE')")
-    @PostMapping("{RoleId}/{AuthorityId}")
-    public ResponseEntity<RoleResponse> grantAuthorityToRole(@PathVariable Long RoleId, @PathVariable Long AuthorityId){
-        RoleResponse roleResponse = roleService.grantAuthorityToRole(RoleId, AuthorityId);
+    @PostMapping("grantAuth/{roleId}")
+    public ResponseEntity<RoleResponse> grantAuthoritiesToRole(
+            @PathVariable Long roleId,
+            @RequestBody List<Long> authorityIds) {
+        RoleResponse roleResponse = roleService.grantAuthoritiesToRole(roleId, authorityIds);
         return new ResponseEntity<>(roleResponse, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('REVOKE_AUTHORITY_FROM_ROLE')")
-    @DeleteMapping("{RoleId}/{AuthorityId}")
-    public ResponseEntity<RoleResponse> revokeAuthorityToRole(@PathVariable Long RoleId, @PathVariable Long AuthorityId){
-        RoleResponse roleResponse = roleService.revokeAuthorityFromRole(RoleId, AuthorityId);
+    @DeleteMapping("revokeAuth/{roleId}")
+    public ResponseEntity<RoleResponse> revokeAuthoritiesFromRole(
+            @PathVariable Long roleId,
+            @RequestBody List<Long> authorityIds) {
+        RoleResponse roleResponse = roleService.revokeAuthoritiesFromRole(roleId, authorityIds);
         return new ResponseEntity<>(roleResponse, HttpStatus.OK);
     }
+    @GetMapping("/mdulesRolesExcludingProfileRole/{idProfile}")
+    public ResponseEntity<List<RoleResponse>> getModulesRoleExcludingProfileRoles(@PathVariable Long idProfile) {
+        List<RoleResponse> roleResponses=roleService.getModulesRolesExcludingProfileRole(idProfile);
+        return new ResponseEntity<>(roleResponses, HttpStatus.OK);
+    }
+
 }

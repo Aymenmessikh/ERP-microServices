@@ -6,7 +6,7 @@ import com.example.adminservice.Entity.Module;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ModuleMapperImp implements ModuleMapper{
+public class ModuleMapperImp implements ModuleMapper {
     @Override
     public Module EntityFromDto(ModuleRequest moduleRequest) {
         return Module.builder()

@@ -23,7 +23,7 @@ create table if not exists role(
     id BIGINT GENERATED ALWAYS AS IDENTITY not null unique primary key,
     libelle varchar(255) not null unique,
     actif BOOLEAN not null,
-    module_id BIGINT not null unique references module(id)
+    module_id BIGINT not null references module(id)
     );
 create table  if not exists authority(
     id BIGINT GENERATED ALWAYS AS IDENTITY not null unique primary key,

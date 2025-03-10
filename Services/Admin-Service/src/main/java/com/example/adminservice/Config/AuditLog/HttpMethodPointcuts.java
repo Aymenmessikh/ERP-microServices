@@ -9,13 +9,18 @@ import org.springframework.stereotype.Component;
 public class HttpMethodPointcuts {
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
-    public void postMethods() {}
+    public void postMethods() {
+    }
+
     @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping)")
-    public void getMethods() {}
+    public void getMethods() {
+    }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping)")
-    public void putMethods() {}
+    public void putMethods() {
+    }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
-    public void deleteMethods() {}
+    public void deleteMethods() {
+    }
 }

@@ -44,11 +44,7 @@ public class TestController {
         UserResponse grantedAuthorities=p.getUserById(id);
         return new ResponseEntity<>(grantedAuthorities, HttpStatus.OK);
     }
-    @GetMapping("a")
-    public ResponseEntity<List<AuthorityResponse>> getA(){
-        List<AuthorityResponse> grantedAuthorities=authorityService.getAllAuthoritys();
-        return new ResponseEntity<>(grantedAuthorities, HttpStatus.OK);
-    }
+
 //    @GetMapping("getjwtFR")
 //    public ResponseEntity<Object> getjwtFR(){
 //        Object o=auditAspect.logRequest();

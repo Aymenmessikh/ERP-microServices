@@ -1,9 +1,9 @@
 package com.example.adminservice.Services;
 
+import com.example.adminservice.Config.Exceptions.UserAlreadyExistsException;
+import com.example.adminservice.Config.Exceptions.UserCreationException;
 import com.example.adminservice.Config.Security.KeycloakProvider;
 import com.example.adminservice.Dto.User.UserRequest;
-import com.example.adminservice.Exeptions.UserAlreadyExistsException;
-import com.example.adminservice.Exeptions.UserCreationException;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.OAuth2Constants;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+
 @Slf4j
 @Transactional
 @Service
@@ -66,12 +67,13 @@ public class KeycloakService {
         }
     }
 
-    public void deleteUser(String uuid){
+    public void deleteUser(String uuid) {
         KeycloakProvider.getUserResource()
                 .get(uuid)
                 .remove();
     }
-    public void updateUser(String uuid,UserRequest userRequest){
+
+    public void updateUser(String uuid, UserRequest userRequest) {
 
         CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
         credentialRepresentation.setTemporary(false);
@@ -90,6 +92,7 @@ public class KeycloakService {
         UserResource usersResource = KeycloakProvider.getUserResource().get(uuid);
         usersResource.update(user);
     }
+
     public void enableDisableUser(String uuid, Boolean enable) {
         UserResource userResource = KeycloakProvider.getUserResource().get(uuid);
         UserRepresentation user = userResource.toRepresentation();

@@ -1,7 +1,5 @@
 package com.example.adminservice.Controller;
 
-import com.example.adminservice.Entity.Authority;
-import com.example.adminservice.Entity.ProfileAuthority;
 import com.example.adminservice.Services.PermisionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,13 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/v1/admin/permission")
 @RequiredArgsConstructor
 public class PermissionController {
     private final PermisionService permisionService;
+
     //    @GetMapping
 //    public ResponseEntity<Boolean> verefierPermission(@RequestParam String authority,
 //                                                      @RequestParam String module,

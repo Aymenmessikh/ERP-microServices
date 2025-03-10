@@ -1,4 +1,4 @@
-package com.example.adminservice.Exeptions;
+package com.example.adminservice.Config.Exceptions;
 
 public class AuthorityNoteExistsException extends RuntimeException{
     public AuthorityNoteExistsException(String message){

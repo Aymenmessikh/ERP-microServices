@@ -1,10 +1,17 @@
 package com.example.adminservice.Controller;
 
+import com.example.adminservice.Config.filter.clause.Clause;
+import com.example.adminservice.Config.filter.clause.ClauseOneArg;
+import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.Critiria;
+import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.SearchValue;
+import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.SortParam;
 import com.example.adminservice.Dto.Authority.AuthorityRequest;
 import com.example.adminservice.Dto.Authority.AuthorityResponse;
 import com.example.adminservice.Services.AuthorityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,8 +35,11 @@ public class AuthorityController {
 
     @PreAuthorize("hasAuthority('READ_AUTHORITIES')")
     @GetMapping
-    public ResponseEntity<List<AuthorityResponse>> getAllAuthorities() {
-        List<AuthorityResponse> authorityResponses = authorityService.getAllAuthoritys();
+    public ResponseEntity<PageImpl<AuthorityResponse>> getAllAuthorityss(@Critiria List<Clause> filter,
+                                                                         @SearchValue ClauseOneArg searchValue,
+                                                                         @SortParam PageRequest pageRequest) {
+        filter.add(searchValue);
+        PageImpl<AuthorityResponse> authorityResponses = authorityService.getAllAuthoritys(filter,pageRequest);
         return new ResponseEntity<>(authorityResponses, HttpStatus.OK);
     }
 
@@ -81,5 +91,16 @@ public class AuthorityController {
     public ResponseEntity<Void> deleteAuthority(@PathVariable Long id) {
         authorityService.deleteAuthority(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @GetMapping("/ModuleAuthoritiesExcludingRoleAuthorities/{idRole}/{idModule}")
+    public ResponseEntity<List<AuthorityResponse>> getModuleAuthoritiesExcludingRoleAuthorities
+            (@PathVariable Long idRole,@PathVariable Long idModule) {
+        List<AuthorityResponse> authorityResponses=authorityService.getModuleAuthoritiesExcludingRoleAuthorities(idRole,idModule);
+        return new ResponseEntity<>(authorityResponses, HttpStatus.OK);
+    }
+    @GetMapping("/ModulesAuthoritiesExcludingProfileAuthorities/{idProfile}")
+    public ResponseEntity<List<AuthorityResponse>> getModulesAuthoritiesExcludingProfileAuthorities(@PathVariable Long idProfile) {
+        List<AuthorityResponse> authorityResponses=authorityService.getModulesAuthoritiesExcludingProfileAuthorities(idProfile);
+        return new ResponseEntity<>(authorityResponses, HttpStatus.OK);
     }
 }

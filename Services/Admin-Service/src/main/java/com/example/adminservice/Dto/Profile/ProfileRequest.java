@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 public class ProfileRequest {
     @NotNull(message = "Libelle cannot be null")
     private String libelle;
-    @NotNull(message = "UserId cannot be null")
     private Long userId;
     private Long groupId;
 }
