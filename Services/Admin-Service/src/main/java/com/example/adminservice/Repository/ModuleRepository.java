@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface ModuleRepository extends JpaRepository<Module, Long>, JpaSpecificationExecutor<Module> {
     Optional<Module> findByModuleCode(String code);
+    long count();
+
 }

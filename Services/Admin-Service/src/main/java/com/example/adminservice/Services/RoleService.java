@@ -167,4 +167,12 @@ public class RoleService {
                 .map(roleMapper::DtoFromEntity)
                 .collect(Collectors.toList());
     }
+    public Long count(){
+        return roleRepository.count();
+    }
+    public Long countByModule(Long id){
+        Module module=moduleRepository.findById(id)
+                .orElseThrow(() -> new MyResourceNotFoundException("Module not found with id: " + id));
+        return roleRepository.countByModule(module);
+    }
 }

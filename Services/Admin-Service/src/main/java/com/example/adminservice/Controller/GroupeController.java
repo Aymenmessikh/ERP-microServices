@@ -91,4 +91,9 @@ public class GroupeController {
         groupeService.deleteGroupe(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @GetMapping("count")
+    public ResponseEntity<Long> count() {
+        Long count= groupeService.count();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
 }

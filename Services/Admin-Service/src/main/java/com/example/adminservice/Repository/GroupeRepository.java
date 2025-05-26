@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface GroupeRepository extends JpaRepository<Groupe, Long>, JpaSpecificationExecutor<Groupe> {
     Optional<Groupe> findByLibelle(String libelle);
+    long count();
+
 }

@@ -7,9 +7,11 @@ import com.example.adminservice.Dto.Module.ModuleRequest;
 import com.example.adminservice.Dto.Module.ModuleResponse;
 import com.example.adminservice.Entity.Module;
 import com.example.adminservice.Entity.Profile;
+import com.example.adminservice.Entity.User;
 import com.example.adminservice.Mapper.Module.ModuleMapper;
 import com.example.adminservice.Repository.ModuleRepository;
 import com.example.adminservice.Repository.ProfileRepository;
+import com.example.adminservice.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ public class ModuleService {
     private final ModuleRepository moduleRepository;
     private final ModuleMapper moduleMapper;
     private final ProfileRepository profileRepository;
+    private final UserRepository userRepository;
 
     public ModuleResponse createModule(ModuleRequest moduleRequest) {
         Module module = moduleRepository.save(moduleMapper.EntityFromDto(moduleRequest));
@@ -42,6 +45,8 @@ public class ModuleService {
         return moduleMapper.DtoFromEntity(moduleRepository.findByModuleCode(code)
                 .orElseThrow(() -> new MyResourceNotFoundException("Module not found with code: " + code)));
     }
+
+
 
     public ModuleResponse updateModule(ModuleRequest moduleRequest, Long id) {
         Module module = moduleRepository.findById(id)
@@ -91,5 +96,14 @@ public class ModuleService {
                 .orElse(Collections.emptyList());
         modules.removeAll(modulesProfile);
         return modules.stream().map(moduleMapper::DtoFromEntity).collect(Collectors.toList());
+    }
+    public List<ModuleResponse> getModulesByProfile(String username) {
+        User user=userRepository.findByUserName(username).orElseThrow();
+        Profile profile=user.getActifProfile();
+        List<Module> modulesProfile = profile.getModules();
+        return modulesProfile.stream().map(moduleMapper::DtoFromEntity).collect(Collectors.toList());
+    }
+    public Long count(){
+        return moduleRepository.count();
     }
 }

@@ -20,8 +20,9 @@ public class UserRequest {
     private String userName;
     @NotNull(message = "Email cannot be null")
     private String email;
-    @NotNull(message = "Password cannot be null")
-    private String password;
+//    @NotNull(message = "Password cannot be null")
+//    private String password;
+    private String address;
     private String phoneNumber;
     private Profile actifProfile;
 }

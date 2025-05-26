@@ -2,13 +2,12 @@ package com.example.auditlogservice.Repository;
 
 import com.example.auditlogservice.Entity.AuditLog;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface AuditRepository extends JpaRepository<AuditLog,Long> {
+public interface AuditRepository extends JpaRepository<AuditLog, Long>, JpaSpecificationExecutor<AuditLog> {
     @Query(value = "SELECT * FROM audit_log " +
             "WHERE module_name = :moduleName " +
             "AND entity_name = :entityName " +

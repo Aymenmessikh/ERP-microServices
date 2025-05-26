@@ -154,5 +154,13 @@ public class AuthorityService {
 
         return filteredAuthorities.stream().map(authorityMapper::DtoFromEntity).collect(Collectors.toList());
     }
+    public Long count(){
+        return authorityRepository.count();
+    }
+    public Long countByModule(Long id){
+        Module module=moduleRepository.findById(id)
+                 .orElseThrow(() -> new MyResourceNotFoundException("Module not found with id: " + id));
+        return authorityRepository.countByModule(module);
+    }
 
 }

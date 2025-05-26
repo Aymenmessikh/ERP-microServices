@@ -69,4 +69,7 @@ public class AuthorityTypeService {
         } else
             throw new RessourceAlreadyEnabledException("Authority Type with ID " + id + " is already disabled");
     }
+    public Long count(){
+        return authorityTypeRepository.count();
+    }
 }

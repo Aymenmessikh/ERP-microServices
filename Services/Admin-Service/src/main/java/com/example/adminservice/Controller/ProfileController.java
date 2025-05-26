@@ -155,4 +155,14 @@ public class ProfileController {
         Set<String> uuids = profileService.getUserUuidforGroupe(id);
         return new ResponseEntity<>(uuids, HttpStatus.OK);
     }
+    @GetMapping("count")
+    public ResponseEntity<Long> count() {
+        Long count= profileService.count();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+//    @GetMapping("countByModule")
+//    public ResponseEntity<Long> countByModule(@RequestParam Long id) {
+//        Long count= profileService.countByModule(id);
+//        return new ResponseEntity<>(count, HttpStatus.OK);
+//    }
 }

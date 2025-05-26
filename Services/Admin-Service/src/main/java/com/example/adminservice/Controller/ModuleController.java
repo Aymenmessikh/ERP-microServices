@@ -1,6 +1,5 @@
 package com.example.adminservice.Controller;
 
-import com.example.adminservice.Dto.Authority.AuthorityResponse;
 import com.example.adminservice.Dto.Module.ModuleRequest;
 import com.example.adminservice.Dto.Module.ModuleResponse;
 import com.example.adminservice.Services.ModuleService;
@@ -75,9 +74,22 @@ public class ModuleController {
         moduleService.deleteModule(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
     @GetMapping("/modulesExcludingModuleProfile/{idProfile}")
     public ResponseEntity<List<ModuleResponse>> getModulesExcludingModuleProfile(@PathVariable Long idProfile) {
-        List<ModuleResponse> moduleResponses=moduleService.getModulesExcludingModuleProfile(idProfile);
+        List<ModuleResponse> moduleResponses = moduleService.getModulesExcludingModuleProfile(idProfile);
         return new ResponseEntity<>(moduleResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/modulesByProfile/{username}")
+    public ResponseEntity<List<ModuleResponse>> getModulesByProfile(@PathVariable String username) {
+        List<ModuleResponse> moduleResponses = moduleService.getModulesByProfile(username);
+        return new ResponseEntity<>(moduleResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("count")
+    public ResponseEntity<Long> count() {
+        Long count = moduleService.count();
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 }

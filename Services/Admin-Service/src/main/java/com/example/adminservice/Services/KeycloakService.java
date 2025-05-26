@@ -53,7 +53,7 @@ public class KeycloakService {
             CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
             credentialRepresentation.setTemporary(false);
             credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
-            credentialRepresentation.setValue(userRequest.getPassword());
+            credentialRepresentation.setValue("admin123");
 
             usersResource.get(userId).resetPassword(credentialRepresentation);
 
@@ -78,7 +78,7 @@ public class KeycloakService {
         CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
         credentialRepresentation.setTemporary(false);
         credentialRepresentation.setType(OAuth2Constants.PASSWORD);
-        credentialRepresentation.setValue(userRequest.getPassword());
+        credentialRepresentation.setValue("admin123");
 
         UserRepresentation user = new UserRepresentation();
         user.setUsername(userRequest.getUserName());

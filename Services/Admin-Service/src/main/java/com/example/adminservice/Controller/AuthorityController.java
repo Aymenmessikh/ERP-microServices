@@ -43,6 +43,7 @@ public class AuthorityController {
         return new ResponseEntity<>(authorityResponses, HttpStatus.OK);
     }
 
+
     @PreAuthorize("hasAuthority('READ_AUTHORITY_BY_ID')")
     @GetMapping("/{id}")
     public ResponseEntity<AuthorityResponse> getAuthorityById(@PathVariable Long id) {
@@ -102,5 +103,15 @@ public class AuthorityController {
     public ResponseEntity<List<AuthorityResponse>> getModulesAuthoritiesExcludingProfileAuthorities(@PathVariable Long idProfile) {
         List<AuthorityResponse> authorityResponses=authorityService.getModulesAuthoritiesExcludingProfileAuthorities(idProfile);
         return new ResponseEntity<>(authorityResponses, HttpStatus.OK);
+    }
+    @GetMapping("count")
+    public ResponseEntity<Long> count() {
+        Long count= authorityService.count();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+    @GetMapping("countByModule")
+    public ResponseEntity<Long> countByModule(@RequestParam Long id) {
+        Long count= authorityService.countByModule(id);
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 }

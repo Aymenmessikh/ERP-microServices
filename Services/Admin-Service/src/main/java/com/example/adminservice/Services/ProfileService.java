@@ -301,4 +301,12 @@ public class ProfileService {
                 .collect(Collectors.toSet());
         return uuids;
     }
+    public Long count(){
+        return profileRepository.count();
+    }
+//    public Long countByModule(Long id){
+//        Module module=moduleRepository.findById(id)
+//                .orElseThrow(() -> new MyResourceNotFoundException("Module not found with id: " + id));
+//        return profileRepository.countByModule(module);
+//    }
 }

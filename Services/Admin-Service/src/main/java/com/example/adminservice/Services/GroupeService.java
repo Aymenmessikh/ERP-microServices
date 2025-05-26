@@ -8,6 +8,7 @@ import com.example.adminservice.Config.filter.specification.GenericSpecification
 import com.example.adminservice.Dto.Groupe.GroupeRequest;
 import com.example.adminservice.Dto.Groupe.GroupeResponse;
 import com.example.adminservice.Entity.Groupe;
+import com.example.adminservice.Entity.Module;
 import com.example.adminservice.Entity.Profile;
 import com.example.adminservice.Mapper.Groupe.GroupeMapper;
 import com.example.adminservice.Repository.GroupeRepository;
@@ -99,5 +100,9 @@ public class GroupeService {
             return groupeMapper.DtoFromEntity(groupe);
         } else
             throw new RessourceAlreadyDisabledException("Module with ID " + id + " is already disabled");
+    }
+
+    public Long count() {
+        return groupeRepository.count();
     }
 }

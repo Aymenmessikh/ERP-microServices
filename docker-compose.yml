@@ -116,10 +116,12 @@ services:
       - "8080:8080"
     volumes:
       - ./Observability/keycloak/realms/:/opt/keycloak/data/import/
+      - ./my-custom-theme:/opt/keycloak/themes/my-custom-theme
     depends_on:
       - postgres-keycloak
     networks:
       - nfr-network
+
 
 
   #  kafka:

@@ -12,4 +12,6 @@ import java.util.List;
 public interface RoleRepository extends JpaRepository<Role ,Long>, JpaSpecificationExecutor<Role> {
     List<Role> findRolesByModule(Module module);
     List<Role> findByModuleIn(List<Module> modules);
+    long count();
+    long countByModule(Module module);
 }

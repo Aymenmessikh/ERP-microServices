@@ -14,12 +14,12 @@ public class GatewayConfig {
                 // Route pour admin-service
                 .route("admin-service", r -> r.path("/api/v1/admin/**")
                         .uri("lb://admin-service"))
-
-//                // Route pour notification-service
-//                .route("notification-service", r -> r.path("/api/v1/notification/**")
-//                        .uri("lb://notification-service"))
-
-                // Route pour discovery-service (Eureka)
+                .route("auditlog-service", r -> r.path("/api/v1/audit-log/**")
+                        .uri("lb://auditlog-service"))
+                // Route pour Authentifcationservice
+                .route("authentification-service", r -> r.path("/api/v1/auth-service/**")
+                        .uri("lb://authentification-service"))
+//                 Route pour discovery-service (Eureka)
                 .route("discovery-service", r -> r.path("/eureka/**")
                         .uri("http://localhost:8761"))
 

@@ -68,4 +68,9 @@ public class AuthorityTypeController {
         authorityTypeService.deleteAuthorityType(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @GetMapping("count")
+    public ResponseEntity<Long> count() {
+        Long count= authorityTypeService.count();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
 }

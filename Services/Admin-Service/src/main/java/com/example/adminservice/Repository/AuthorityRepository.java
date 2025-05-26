@@ -19,4 +19,7 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long>, Jpa
     List<Authority> findByModuleIn(List<Module> modules);
 
     Optional<Authority> findByLibelleAndModule(String authorityLibelle, Module module);
+    long count();
+    long countByModule(Module module);
+
 }

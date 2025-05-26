@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Authority implements Serializable {
+public class Authority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,6 +28,4 @@ public class Authority implements Serializable {
     private AuthorityType authorityType;
     @ManyToMany(mappedBy = "authoritys")
     private List<Role> roles;
-//    @OneToMany(mappedBy = "authority")
-//    private List<ProfileAuthority> profileAuthorities;
 }

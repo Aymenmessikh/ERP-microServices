@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AuthorityTypeRepository extends JpaRepository<AuthorityType, Long>, JpaSpecificationExecutor<AuthorityType> {
+    long count();
 }

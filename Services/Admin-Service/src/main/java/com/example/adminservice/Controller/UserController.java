@@ -5,6 +5,8 @@ import com.example.adminservice.Config.filter.clause.ClauseOneArg;
 import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.Critiria;
 import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.SearchValue;
 import com.example.adminservice.Config.filter.handlerMethodeArgumentResolver.SortParam;
+import com.example.adminservice.Dto.Profile.ProfileResponse;
+import com.example.adminservice.Dto.User.UserProfileInfoDto;
 import com.example.adminservice.Dto.User.UserRequest;
 import com.example.adminservice.Dto.User.UserResponse;
 import com.example.adminservice.Services.UserService;
@@ -80,5 +82,35 @@ public class UserController {
         System.out.println("enableDisableUser called with id: " + id + " and enable: " + enable);
        UserResponse userResponse= userService.enableDisabeleUser(id, enable);
        return new ResponseEntity<>(userResponse,HttpStatus.CREATED);
+    }
+    @GetMapping("count")
+    public ResponseEntity<Long> count() {
+        Long count= userService.count();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+    @GetMapping("countAcifUser")
+    public ResponseEntity<Long> countActifUser() {
+        Long count= userService.countActifUser();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+    @GetMapping("/by-module/{moduleId}")
+    public ResponseEntity<List<UserProfileInfoDto>> getUsersByModule(@PathVariable Long moduleId) {
+        List<UserProfileInfoDto> result = userService.getUsersByModuleId(moduleId);
+        return ResponseEntity.ok(result);
+    }
+    @GetMapping("getActifProfil/{username}")
+    public ResponseEntity<ProfileResponse> changeActifProfile(@PathVariable String username) {
+        ProfileResponse profileResponse=userService.getActifeProfile(username);
+        return new ResponseEntity<>(profileResponse, HttpStatus.OK);
+    }
+    @GetMapping("getInActifProfil/{username}")
+    public ResponseEntity<List<ProfileResponse>> changeInActifProfile(@PathVariable String username) {
+        List<ProfileResponse> profileResponse=userService.getInActiveProfile(username);
+        return new ResponseEntity<>(profileResponse, HttpStatus.OK);
+    }
+    @PutMapping("changeActiveProfile/{id}/{username}")
+    public ResponseEntity<UserResponse> changeActiveProfile(@PathVariable Long id, @PathVariable String username){
+        UserResponse userResponse=userService.changeActiveProfile(id,username);
+        return new  ResponseEntity<>(userResponse,HttpStatus.CREATED);
     }
 }

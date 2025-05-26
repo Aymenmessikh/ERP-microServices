@@ -106,5 +106,15 @@ public class RoleController {
         List<RoleResponse> roleResponses=roleService.getModulesRolesExcludingProfileRole(idProfile);
         return new ResponseEntity<>(roleResponses, HttpStatus.OK);
     }
+    @GetMapping("count")
+    public ResponseEntity<Long> count() {
+        Long count= roleService.count();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+    @GetMapping("countByModule")
+    public ResponseEntity<Long> countByModule(@RequestParam Long id) {
+        Long count= roleService.countByModule(id);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
 
 }

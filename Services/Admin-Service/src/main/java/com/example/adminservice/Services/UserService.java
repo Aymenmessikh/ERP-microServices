@@ -3,22 +3,29 @@ package com.example.adminservice.Services;
 import com.example.adminservice.Config.Exceptions.MyResourceNotFoundException;
 import com.example.adminservice.Config.filter.clause.Clause;
 import com.example.adminservice.Config.filter.specification.GenericSpecification;
+import com.example.adminservice.Dto.Profile.ProfileResponse;
+import com.example.adminservice.Dto.User.BlockchainRegisterRequest;
+import com.example.adminservice.Dto.User.UserProfileInfoDto;
 import com.example.adminservice.Dto.User.UserRequest;
 import com.example.adminservice.Dto.User.UserResponse;
 import com.example.adminservice.Entity.Profile;
 import com.example.adminservice.Entity.ProfileAuthority;
 import com.example.adminservice.Entity.User;
+import com.example.adminservice.Mapper.Profile.ProfileMapper;
 import com.example.adminservice.Mapper.User.UserMapper;
 import com.example.adminservice.Repository.ProfileRepository;
 import com.example.adminservice.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +40,17 @@ public class UserService {
     private final ProfileRepository profileRepository;
     private final KeycloakService keycloakService;
     private final UserMapper userMapper;
-//    private final KafkaEvents kafkaEvents;
+    private final ProfileMapper profileMapper;
+    //    private final KafkaEvents kafkaEvents;
+    private final RestTemplate restTemplate;
+
 
     public UserResponse createUser(UserRequest userRequest, Long profileTypeId) {
         String uuid = keycloakService.createUser(userRequest);
         if (uuid == null) {
             throw new IllegalStateException("UUID is null. User creation in Keycloak failed.");
         }
+
         User user = userMapper.EntityFromDto(userRequest);
         user.setUuid(uuid);
         userRepository.save(user);
@@ -47,8 +58,26 @@ public class UserService {
         user.setActifProfile(defaultProfile);
         user.addProfile(defaultProfile);
         userRepository.save(user);
+        registerOnBlockchain(userRequest.getAddress(), userRequest.getUserName());
 //         triggerUserEvent(createdUser);
         return userMapper.DtoFromEntity(user);
+    }
+
+    public void registerOnBlockchain(String address, String username) {
+        String blockchainUrl = "http://localhost:3000/users/register"; // Update with your Express.js host
+
+        BlockchainRegisterRequest request = new BlockchainRegisterRequest(address, username);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(blockchainUrl, request, String.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                System.out.println("User registered on blockchain successfully");
+            } else {
+                System.out.println("Blockchain registration failed: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            System.err.println("Error calling blockchain service: " + e.getMessage());
+        }
     }
 
 
@@ -142,7 +171,7 @@ public class UserService {
     public UserResponse enableDisabeleUser(Long id, Boolean enable) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new MyResourceNotFoundException("User not found with id:" + id));
-        // keycloakService.enableDisableUser(user.getUuid(), enable);
+//         keycloakService.enableDisableUser(user.getUuid(), enable);
         user.setActif(enable);
         userRepository.save(user);
         return userMapper.DtoFromEntity(user);
@@ -158,5 +187,44 @@ public class UserService {
     public List<UserResponse> getUsers() {
         List<User> users = userRepository.findAll();
         return users.stream().map(userMapper::DtoFromEntity).collect(Collectors.toList());
+    }
+
+    public Long count() {
+        return userRepository.count();
+    }
+
+    public Long countActifUser() {
+        return userRepository.countByActifTrue();
+    }
+    public List<UserProfileInfoDto> getUsersByModuleId(Long moduleId) {
+        return userRepository.findUsersByModuleId(moduleId);
+    }
+
+    public UserResponse changeActiveProfile(Long id, String username) {
+        User user = userRepository.findByUserName(username)
+                .orElseThrow();
+        Profile newActiveProfile = profileRepository.findById(id)
+                .orElseThrow();
+        user.setActifProfile(newActiveProfile);
+        user = userRepository.save(user);
+        return userMapper.DtoFromEntity(user);
+    }
+    public ProfileResponse getActifeProfile(String username){
+        User user=userRepository.findByUserName(username).orElseThrow();
+        Profile profile=user.getActifProfile();
+        return profileMapper.DtoFromEntity(profile);
+    }
+    public List<ProfileResponse> getInActiveProfile(String username) {
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new MyResourceNotFoundException("User not found"));
+
+        Profile activeProfile = user.getActifProfile();
+        List<Profile> inactiveProfiles = user.getProfiles().stream()
+                .filter(profile -> !profile.equals(activeProfile))
+                .collect(Collectors.toList());
+
+        return inactiveProfiles.stream()
+                .map(profileMapper::DtoFromEntity)
+                .collect(Collectors.toList());
     }
 }
